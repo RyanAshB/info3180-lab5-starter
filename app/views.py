@@ -5,10 +5,13 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
-from app import app
-from flask import render_template, request, jsonify, send_file
 import os
+from app import app, db
+from flask import render_template, request, jsonify, send_file
+from app.forms import MovieForm
 from app.models import movies
+from werkzeug.utils import secure_filename
+from datetime import datetime
 
 
 ###
@@ -23,6 +26,34 @@ def index():
 ###
 # The functions below should be applicable to all Flask apps.
 ###
+
+@app.route('/api/v1/movies', methods=['POST'])
+def movies():
+    form = MovieForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        description = form.description.data
+        poster = form.poster.data
+
+        filename = secure_filename(poster.filename)
+        poster.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        movie = movies(title=title, description=description, poster=filename, created_at=datetime.utcnow())
+        db.session.add(movie)
+        db.session.commit()
+
+        response = {
+            "message": "Movie Successfully added",
+            "title": title,
+            "poster": filename,
+            "description": description
+        }
+
+        return jsonify(response), 201
+
+    errors = form_errors(form)
+    return jsonify(errors=errors), 400
+
 
 # Here we define a function to collect form errors from Flask-WTF
 # which we can later use
