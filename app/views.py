@@ -39,7 +39,7 @@ def movies():
         filename = secure_filename(poster.filename)
         poster.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-        movie = movies(title=title, description=description, poster=filename, created_at=datetime.utcnow())
+        movie = movies(id = 1, title=title, description=description, poster=filename, created_at=datetime.utcnow())
         db.session.add(movie)
         db.session.commit()
 
@@ -59,6 +59,25 @@ def movies():
 @app.route('/api/v1/csrf-token', methods=['GET'])
 def get_csrf():
     return jsonify({'csrf_token': generate_csrf()})
+
+@app.route('/api/v1/movies', methods=['GET'])
+def get_movies():
+    movies_list = movies.query.all()
+    response = {"movies": []}
+    for movie in movies_list:
+        movie_data = {
+            "id": movie.id,
+            "title": movie.title,
+            "description": movie.description,
+            "poster": f"/api/v1/posters/{movie.poster}"
+        }
+        response["movies"].append(movie_data)
+    return jsonify(response), 200
+
+
+@app.route('/api/v1/posters/<filename>', methods=['GET'])
+def get_poster(filename):
+    return send_file(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
 
 # Here we define a function to collect form errors from Flask-WTF

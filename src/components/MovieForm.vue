@@ -3,6 +3,8 @@
 
 import { ref, onMounted } from "vue";
 
+
+
 onMounted(() => {
     getCsrfToken();
 });
@@ -55,10 +57,10 @@ const saveMovie = () => {
             <input type="text" name="description" class="formcontrol" />
         </div>
         <div class="form-group mb-3">
-            <label for="poster" class="form-label">Movie Poster</label>
-            <input type="image" name="poster" class="formcontrol" />
+            <label for="photo" class="form-label">Movie Poster</label>
+            <input type="file" name="photo" accept="image/*" />
         </div>
 
-        <button class="btn btn-primary" type="submit">Add</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </form>
 </template>
