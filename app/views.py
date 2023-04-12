@@ -12,6 +12,7 @@ from app.forms import MovieForm
 from app.models import movies
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from flask_wtf.csrf import generate_csrf
 
 
 ###
@@ -53,6 +54,11 @@ def movies():
 
     errors = form_errors(form)
     return jsonify(errors=errors), 400
+
+
+@app.route('/api/v1/csrf-token', methods=['GET'])
+def get_csrf():
+    return jsonify({'csrf_token': generate_csrf()})
 
 
 # Here we define a function to collect form errors from Flask-WTF

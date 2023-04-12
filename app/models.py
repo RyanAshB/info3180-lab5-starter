@@ -10,13 +10,13 @@ class movies(db.Model):
     title = db.Column(db.String(80))
     description = db.Column(db.Text)
     poster = db.Column(db.String(80))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, nullable = False)
 
     def __init__(self, id, title, description, poster, created_at):
         self.title = title
         self.description = description
         self.poster = poster
-        self.created_at = created_at
+        self.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def __repr__(self):
         return '<Movie {}>'.format(self.title)

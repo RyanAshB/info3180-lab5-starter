@@ -8,7 +8,5 @@ from wtforms import FileField
 class MovieForm(FlaskForm):
     title = StringField('Username', validators=[InputRequired()])
     description = TextAreaField('Description', validators=[DataRequired()])
-    poster = FileField('Poster', validators=[FileRequired(), FileAllowed(['jpeg', 'png'], 'Images only!')])
-
-
+    poster = FileField('Poster', validators=[FileRequired(), FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
 
